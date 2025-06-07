@@ -14,6 +14,8 @@ import FireMonitoring from "@/pages/FireMonitoring";
 import DigitalPermits from "@/pages/DigitalPermits";
 import PerformanceKRAs from "@/pages/PerformanceKRAs";
 import CarbonCredits from "@/pages/CarbonCredits";
+import GoalsTargets from "@/pages/GoalsTargets";
+import SectoralGroups from "@/pages/SectoralGroups";
 import EmergencyModal from "@/components/EmergencyModal";
 import NotFound from "@/pages/not-found";
 
@@ -28,6 +30,8 @@ function Router() {
       <Route path="/permits" component={DigitalPermits} />
       <Route path="/performance" component={PerformanceKRAs} />
       <Route path="/carbon-credits" component={CarbonCredits} />
+      <Route path="/goals" component={GoalsTargets} />
+      <Route path="/sectoral" component={SectoralGroups} />
       <Route component={NotFound} />
     </Switch>
   );
