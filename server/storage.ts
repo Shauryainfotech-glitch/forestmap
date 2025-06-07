@@ -24,6 +24,8 @@ import {
   type OfficerPerformance, 
   type InsertOfficerPerformance 
 } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   // Officers
@@ -509,4 +511,221 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// DatabaseStorage implementation
+export class DatabaseStorage implements IStorage {
+  private initialized = false;
+
+  private async ensureInitialized() {
+    if (this.initialized) return;
+    
+    // Check if database has data
+    const existingOfficers = await db.select().from(officers).limit(1);
+    if (existingOfficers.length === 0) {
+      // Import and run seeding
+      const { seedDatabase } = await import('./seed');
+      await seedDatabase();
+    }
+    
+    this.initialized = true;
+  }
+  async getOfficers(): Promise<Officer[]> {
+    await this.ensureInitialized();
+    return await db.select().from(officers);
+  }
+
+  async getOfficer(id: number): Promise<Officer | undefined> {
+    const [officer] = await db.select().from(officers).where(eq(officers.id, id));
+    return officer || undefined;
+  }
+
+  async getOfficerByEmail(email: string): Promise<Officer | undefined> {
+    const [officer] = await db.select().from(officers).where(eq(officers.email, email));
+    return officer || undefined;
+  }
+
+  async createOfficer(insertOfficer: InsertOfficer): Promise<Officer> {
+    const [officer] = await db
+      .insert(officers)
+      .values(insertOfficer)
+      .returning();
+    return officer;
+  }
+
+  async updateOfficer(id: number, officer: Partial<InsertOfficer>): Promise<Officer | undefined> {
+    const [updated] = await db
+      .update(officers)
+      .set(officer)
+      .where(eq(officers.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async getForestRanges(): Promise<ForestRange[]> {
+    return await db.select().from(forestRanges);
+  }
+
+  async getForestRange(id: number): Promise<ForestRange | undefined> {
+    const [range] = await db.select().from(forestRanges).where(eq(forestRanges.id, id));
+    return range || undefined;
+  }
+
+  async createForestRange(range: InsertForestRange): Promise<ForestRange> {
+    const [newRange] = await db
+      .insert(forestRanges)
+      .values(range)
+      .returning();
+    return newRange;
+  }
+
+  async updateForestRange(id: number, range: Partial<InsertForestRange>): Promise<ForestRange | undefined> {
+    const [updated] = await db
+      .update(forestRanges)
+      .set(range)
+      .where(eq(forestRanges.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async getFireAlerts(): Promise<FireAlert[]> {
+    return await db.select().from(fireAlerts);
+  }
+
+  async getActiveFireAlerts(): Promise<FireAlert[]> {
+    return await db.select().from(fireAlerts).where(eq(fireAlerts.status, 'active'));
+  }
+
+  async getFireAlert(id: number): Promise<FireAlert | undefined> {
+    const [alert] = await db.select().from(fireAlerts).where(eq(fireAlerts.id, id));
+    return alert || undefined;
+  }
+
+  async createFireAlert(alert: InsertFireAlert): Promise<FireAlert> {
+    const [newAlert] = await db
+      .insert(fireAlerts)
+      .values(alert)
+      .returning();
+    return newAlert;
+  }
+
+  async updateFireAlert(id: number, alert: Partial<InsertFireAlert>): Promise<FireAlert | undefined> {
+    const [updated] = await db
+      .update(fireAlerts)
+      .set(alert)
+      .where(eq(fireAlerts.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async getPlantationRecords(): Promise<PlantationRecord[]> {
+    return await db.select().from(plantationRecords);
+  }
+
+  async getPlantationRecordsByRange(rangeId: number): Promise<PlantationRecord[]> {
+    return await db.select().from(plantationRecords).where(eq(plantationRecords.rangeId, rangeId));
+  }
+
+  async createPlantationRecord(record: InsertPlantationRecord): Promise<PlantationRecord> {
+    const [newRecord] = await db
+      .insert(plantationRecords)
+      .values(record)
+      .returning();
+    return newRecord;
+  }
+
+  async updatePlantationRecord(id: number, record: Partial<InsertPlantationRecord>): Promise<PlantationRecord | undefined> {
+    const [updated] = await db
+      .update(plantationRecords)
+      .set(record)
+      .where(eq(plantationRecords.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async getPermits(): Promise<Permit[]> {
+    return await db.select().from(permits);
+  }
+
+  async getPermitsByRange(rangeId: number): Promise<Permit[]> {
+    return await db.select().from(permits).where(eq(permits.rangeId, rangeId));
+  }
+
+  async getPermitsByStatus(status: string): Promise<Permit[]> {
+    return await db.select().from(permits).where(eq(permits.status, status));
+  }
+
+  async createPermit(permit: InsertPermit): Promise<Permit> {
+    const [newPermit] = await db
+      .insert(permits)
+      .values(permit)
+      .returning();
+    return newPermit;
+  }
+
+  async updatePermit(id: number, permit: Partial<InsertPermit>): Promise<Permit | undefined> {
+    const [updated] = await db
+      .update(permits)
+      .set(permit)
+      .where(eq(permits.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async getForestStats(): Promise<ForestStats[]> {
+    return await db.select().from(forestStats);
+  }
+
+  async getForestStatsByRange(rangeId: number): Promise<ForestStats[]> {
+    return await db.select().from(forestStats).where(eq(forestStats.rangeId, rangeId));
+  }
+
+  async createForestStats(stats: InsertForestStats): Promise<ForestStats> {
+    const [newStats] = await db
+      .insert(forestStats)
+      .values(stats)
+      .returning();
+    return newStats;
+  }
+
+  async getVision2047Progress(): Promise<Vision2047Progress[]> {
+    return await db.select().from(vision2047Progress);
+  }
+
+  async getVision2047ProgressByRange(rangeId: number): Promise<Vision2047Progress[]> {
+    return await db.select().from(vision2047Progress).where(eq(vision2047Progress.rangeId, rangeId));
+  }
+
+  async createVision2047Progress(progress: InsertVision2047Progress): Promise<Vision2047Progress> {
+    const [newProgress] = await db
+      .insert(vision2047Progress)
+      .values(progress)
+      .returning();
+    return newProgress;
+  }
+
+  async updateVision2047Progress(id: number, progress: Partial<InsertVision2047Progress>): Promise<Vision2047Progress | undefined> {
+    const [updated] = await db
+      .update(vision2047Progress)
+      .set({ ...progress, lastUpdated: new Date() })
+      .where(eq(vision2047Progress.id, id))
+      .returning();
+    return updated || undefined;
+  }
+
+  async getOfficerPerformance(): Promise<OfficerPerformance[]> {
+    return await db.select().from(officerPerformance);
+  }
+
+  async getOfficerPerformanceByOfficer(officerId: number): Promise<OfficerPerformance[]> {
+    return await db.select().from(officerPerformance).where(eq(officerPerformance.officerId, officerId));
+  }
+
+  async createOfficerPerformance(performance: InsertOfficerPerformance): Promise<OfficerPerformance> {
+    const [newPerformance] = await db
+      .insert(officerPerformance)
+      .values(performance)
+      .returning();
+    return newPerformance;
+  }
+}
+
+export const storage = new DatabaseStorage();
