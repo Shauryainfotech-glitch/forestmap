@@ -15,7 +15,13 @@ import {
   Target,
   TrendingUp,
   MapPin,
-  Phone
+  Phone,
+  Brain,
+  Activity,
+  Shield,
+  Zap,
+  BarChart3,
+  Globe
 } from "lucide-react";
 import StatsCard from "@/components/StatsCard";
 import MapInterface from "@/components/MapInterface";

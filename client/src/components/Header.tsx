@@ -1,11 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { AlertTriangle, TreePine, User } from "lucide-react";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { AlertTriangle, TreePine, User, Shield, Settings, LogOut, Bell } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface HeaderProps {
   language: 'en' | 'mr' | 'hi';
   setLanguage: (lang: 'en' | 'mr' | 'hi') => void;
   onEmergencyClick: () => void;
+  onSecurityClick: () => void;
 }
 
 const translations = {
@@ -29,7 +38,7 @@ const translations = {
   }
 };
 
-export default function Header({ language, setLanguage, onEmergencyClick }: HeaderProps) {
+export default function Header({ language, setLanguage, onEmergencyClick, onSecurityClick }: HeaderProps) {
   const t = translations[language];
 
   return (
@@ -49,6 +58,16 @@ export default function Header({ language, setLanguage, onEmergencyClick }: Head
           </div>
           
           <div className="flex items-center space-x-4">
+            {/* Notifications */}
+            <div className="relative">
+              <Button variant="ghost" size="sm" className="relative">
+                <Bell size={18} />
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 text-xs bg-alert-red">
+                  3
+                </Badge>
+              </Button>
+            </div>
+
             {/* Language Switcher */}
             <Select value={language} onValueChange={(value: 'en' | 'mr' | 'hi') => setLanguage(value)}>
               <SelectTrigger className="w-24">
@@ -70,13 +89,46 @@ export default function Header({ language, setLanguage, onEmergencyClick }: Head
               {t.emergency}
             </Button>
             
-            {/* User Profile */}
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                <User className="text-gray-600" size={16} />
-              </div>
-              <span className="text-sm text-gray-700">{t.officer}</span>
-            </div>
+            {/* Security Access Button */}
+            <Button 
+              onClick={onSecurityClick}
+              variant="outline"
+              className="border-gov-blue text-gov-blue hover:bg-gov-blue hover:text-white"
+            >
+              <Shield className="mr-2" size={16} />
+              Secure Access
+            </Button>
+            
+            {/* User Profile Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-maharashtra-saffron rounded-full flex items-center justify-center">
+                    <User className="text-white" size={16} />
+                  </div>
+                  <span className="text-sm text-gray-700">{t.officer}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem>
+                  <User className="mr-2" size={16} />
+                  Profile Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onSecurityClick}>
+                  <Shield className="mr-2" size={16} />
+                  Security Center
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Settings className="mr-2" size={16} />
+                  Preferences
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="text-alert-red">
+                  <LogOut className="mr-2" size={16} />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>

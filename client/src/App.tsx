@@ -19,6 +19,7 @@ import SectoralGroups from "@/pages/SectoralGroups";
 import AIAnalytics from "@/pages/AIAnalytics";
 import RealTimeMonitoring from "@/pages/RealTimeMonitoring";
 import EmergencyModal from "@/components/EmergencyModal";
+import SecurityModal from "@/components/SecurityModal";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -43,6 +44,7 @@ function Router() {
 
 function App() {
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
+  const [showSecurityModal, setShowSecurityModal] = useState(false);
   const [language, setLanguage] = useState<'en' | 'mr' | 'hi'>('en');
 
   return (
@@ -53,6 +55,7 @@ function App() {
             language={language} 
             setLanguage={setLanguage}
             onEmergencyClick={() => setShowEmergencyModal(true)}
+            onSecurityClick={() => setShowSecurityModal(true)}
           />
           
           <div className="flex h-[calc(100vh-64px)]">
@@ -65,6 +68,11 @@ function App() {
           <EmergencyModal 
             isOpen={showEmergencyModal}
             onClose={() => setShowEmergencyModal(false)}
+          />
+          
+          <SecurityModal 
+            isOpen={showSecurityModal}
+            onClose={() => setShowSecurityModal(false)}
           />
         </div>
         <Toaster />
