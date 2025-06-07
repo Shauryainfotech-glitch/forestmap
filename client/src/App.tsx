@@ -16,6 +16,8 @@ import PerformanceKRAs from "@/pages/PerformanceKRAs";
 import CarbonCredits from "@/pages/CarbonCredits";
 import GoalsTargets from "@/pages/GoalsTargets";
 import SectoralGroups from "@/pages/SectoralGroups";
+import AIAnalytics from "@/pages/AIAnalytics";
+import RealTimeMonitoring from "@/pages/RealTimeMonitoring";
 import EmergencyModal from "@/components/EmergencyModal";
 import NotFound from "@/pages/not-found";
 
@@ -32,6 +34,8 @@ function Router() {
       <Route path="/carbon-credits" component={CarbonCredits} />
       <Route path="/goals" component={GoalsTargets} />
       <Route path="/sectoral" component={SectoralGroups} />
+      <Route path="/ai-analytics" component={AIAnalytics} />
+      <Route path="/real-time-monitoring" component={RealTimeMonitoring} />
       <Route component={NotFound} />
     </Switch>
   );
