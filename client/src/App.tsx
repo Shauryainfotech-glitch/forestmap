@@ -18,6 +18,7 @@ import GoalsTargets from "@/pages/GoalsTargets";
 import SectoralGroups from "@/pages/SectoralGroups";
 import AIAnalytics from "@/pages/AIAnalytics";
 import RealTimeMonitoring from "@/pages/RealTimeMonitoring";
+import HumanWildlifeConflict from "@/pages/HumanWildlifeConflict";
 import EmergencyModal from "@/components/EmergencyModal";
 import SecurityModal from "@/components/SecurityModal";
 import NotFound from "@/pages/not-found";
@@ -37,6 +38,7 @@ function Router() {
       <Route path="/sectoral" component={SectoralGroups} />
       <Route path="/ai-analytics" component={AIAnalytics} />
       <Route path="/real-time-monitoring" component={RealTimeMonitoring} />
+      <Route path="/human-wildlife-conflict" component={HumanWildlifeConflict} />
       <Route component={NotFound} />
     </Switch>
   );

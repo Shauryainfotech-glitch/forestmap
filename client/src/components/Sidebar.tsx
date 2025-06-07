@@ -11,7 +11,8 @@ import {
   Map,
   Handshake,
   Brain,
-  Activity
+  Activity,
+  Shield
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +35,7 @@ const visionNavigation = [
 const advancedNavigation = [
   { name: "AI Analytics", nameHi: "AI विश्लेषण", href: "/ai-analytics", icon: Brain },
   { name: "Real-Time Monitoring", nameHi: "रियल-टाइम निरीक्षण", href: "/real-time-monitoring", icon: Activity },
+  { name: "Human-Wildlife Conflict", nameHi: "मानव-वन्यजीव संघर्ष", href: "/human-wildlife-conflict", icon: Shield },
 ];
 
 export default function Sidebar() {
